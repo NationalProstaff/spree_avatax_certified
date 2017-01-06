@@ -9,7 +9,7 @@ module SpreeAvataxCertified
 
     def initialize(order)
       @order = order
-      @ship_address = order.ship_address || order.bill_address
+      @ship_address = order.ship_address
       @origin_address = JSON.parse(Spree::Config.avatax_origin)
       @addresses = []
       @logger ||= AvataxHelper::AvataxLog.new('avalara_order_addresses', 'SpreeAvataxCertified::Address', "Building Addresses for Order#: #{order.number}")
