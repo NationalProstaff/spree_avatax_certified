@@ -3,6 +3,7 @@ require_dependency 'spree/order'
 
 module Spree
   class AvalaraTransaction < ActiveRecord::Base
+    class Avalara::CalculationError < StandardError; end
     AVALARA_TRANSACTION_LOGGER = AvataxHelper::AvataxLog.new('post_order_to_avalara', __FILE__)
 
     belongs_to :order
@@ -112,7 +113,7 @@ module Spree
 
       AVALARA_TRANSACTION_LOGGER.info_and_debug('tax result', tax_result)
 
-      return { TotalTax: '0.00' } if tax_result == 'error in Tax'
+      raise Avalara::CalculationError if tax_result == 'error in Tax'
       return tax_result if tax_result['ResultCode'] == 'Success'
     end
 
@@ -151,7 +152,7 @@ module Spree
 
       AVALARA_TRANSACTION_LOGGER.info_and_debug('tax result', tax_result)
 
-      return { TotalTax: '0.00' } if tax_result == 'error in Tax'
+      raise Avalara::CalculationError if tax_result == 'error in Tax'
       return tax_result if tax_result['ResultCode'] == 'Success'
     end
 
