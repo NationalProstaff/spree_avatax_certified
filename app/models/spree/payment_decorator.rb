@@ -16,8 +16,16 @@ Spree::Payment.class_eval do
     #if self.amount != order.total
     #  self.update_attributes(amount: order.total)
     #end
-    if order.payments.where(state: "completed").sum(&:amount) == order.total 
-      order.avalara_capture_finalize
+    begin
+      if (self.state == "completed" && order.payments.where(state: "completed").sum(&:amount) >= order.total)
+        order.avalara_capture_finalize
+      elsif (self.state == "processing" && (self.amount + order.payments.where(state: "completed").sum(&:amount)) >= order.total)
+        order.avalara_capture_finalize
+      else
+        Rails.logger.info("Partial payment captured: waiting to finalize avatax transaction")
+      end
+    rescue Avalara::CalculationError => e
+      Rails.logger.warn("Unable to calculate tax on order #{order.number}")
     end
   end
 end
