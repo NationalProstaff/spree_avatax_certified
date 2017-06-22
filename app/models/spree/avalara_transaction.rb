@@ -79,7 +79,7 @@ module Spree
       avatax_address = SpreeAvataxCertified::Address.new(order)
       avatax_line = SpreeAvataxCertified::Line.new(order, doc_type)
 
-      if defined?(Spree::AVATAX_ADDRESS_VALIDATION) && Spree::AVATAX_ADDRESS_VALIDATION == 1
+      if defined?(Spree::AVATAX_ADDRESS_VALIDATION).nil? || (defined?(Spree::AVATAX_ADDRESS_VALIDATION) && Spree::AVATAX_ADDRESS_VALIDATION == 1)
         response = avatax_address.validate
 
         unless response.nil?
