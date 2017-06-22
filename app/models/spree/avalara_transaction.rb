@@ -79,13 +79,15 @@ module Spree
       avatax_address = SpreeAvataxCertified::Address.new(order)
       avatax_line = SpreeAvataxCertified::Line.new(order, doc_type)
 
-      response = avatax_address.validate
+      if defined?(Spree::AVATAX_ADDRESS_VALIDATION) && Spree::AVATAX_ADDRESS_VALIDATION == 1
+        response = avatax_address.validate
 
-      unless response.nil?
-        if response['ResultCode'] == 'Success'
-          AVALARA_TRANSACTION_LOGGER.info('Address Validation Success')
-        else
-          AVALARA_TRANSACTION_LOGGER.info('Address Validation Failed')
+        unless response.nil?
+          if response['ResultCode'] == 'Success'
+            AVALARA_TRANSACTION_LOGGER.info('Address Validation Success')
+          else
+            AVALARA_TRANSACTION_LOGGER.info('Address Validation Failed')
+          end
         end
       end
 
