@@ -110,7 +110,7 @@ module SpreeAvataxCertified
     end
 
     def address_validation_enabled?
-      Spree::Config.avatax_address_validation && country_enabled?
+      Spree::Config.avatax_address_validation && country_enabled? && (!@ship_address.respond_to?(:validated) || !@ship_address.validated?)
     end
 
     def credential
