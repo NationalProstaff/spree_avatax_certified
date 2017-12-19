@@ -1,5 +1,5 @@
 require 'logger'
-REFUND_LOGGER = AvataxHelper::AvataxLog.new('refund', 'refund class')
+REFUND_LOGGER ||= AvataxHelper::AvataxLog.new('refund', 'refund class') #unless const_defined?(:REFUND_LOGGER)
 
 Spree::Refund.class_eval do
   REFUND_LOGGER.info('start refund processing')

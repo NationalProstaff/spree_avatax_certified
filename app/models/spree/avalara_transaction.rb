@@ -4,7 +4,7 @@ require_dependency 'spree/order'
 module Spree
   class AvalaraTransaction < ActiveRecord::Base
     class Avalara::CalculationError < StandardError; end
-    AVALARA_TRANSACTION_LOGGER = AvataxHelper::AvataxLog.new('post_order_to_avalara', __FILE__)
+    AVALARA_TRANSACTION_LOGGER = AvataxHelper::AvataxLog.new('post_order_to_avalara', __FILE__) unless const_defined?(:AVALARA_TRANSACTION_LOGGER)
 
     belongs_to :order
     belongs_to :reimbursement
